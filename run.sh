@@ -5,4 +5,9 @@ if [[ $1 == "zip" ]]; then
 	exit
 fi
 
+if [[ $1 == "sat" ]]; then
+	python3 solution_sat.py
+	exit
+fi
+
 python3 solution.py
