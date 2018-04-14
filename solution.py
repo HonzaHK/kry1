@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 
 #prints first 512B of super_cipher.py.enc decoded
 def printPythonFileContent():
@@ -58,7 +59,20 @@ def enc(key):
 
 # printPythonFileContent()
 
+#dictionary to search fast for possible succeeding indexes into sub
+'''
+1:
+	001: (0: 011, 1: 010)
+	010: (0: 101, 1: 100)
+	100: (0: 000, 1: 001)
+	110: (0: 101, 1: 100)
 
+0:
+	000: (0: 000, 1: 001)
+	011: (0: 111, 1: 110)
+	101: (0: 011, 1: 010)
+	111: (0: 111, 1: 110)
+'''
 sub_inv = {
 	1: {
 		1: { 0:3, 1:2},
@@ -74,14 +88,12 @@ sub_inv = {
 	}
 }
 
-#for testing purposes
-# y_after_step = enc("KRY_0123456789")
-
 #get my keystream
 keystream = getKeystream()
 
 #keystream is y after all iterations in "enc" function (integer)
 y_after_step = int.from_bytes(keystream,'little')
+# y_after_step = enc("KRY_0123456789") #for testing purposes
 
 #do as many iterations as "enc" does
 for i in range(N//2):
@@ -134,7 +146,7 @@ for i in range(N//2):
 	y_after_step = x_orig
 
 #we know key has length 29 -> convert int to bytes and then to string
-key = x_orig.to_bytes(29,byteorder='little').decode()
+key = x_orig.to_bytes(32,byteorder='little').decode()
 
 #print out the key
-print(key)
+sys.stdout.write(key)
